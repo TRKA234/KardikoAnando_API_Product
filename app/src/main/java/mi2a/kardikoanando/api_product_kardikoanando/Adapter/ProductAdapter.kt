@@ -1,5 +1,6 @@
 package mi2a.kardikoanando.api_product_kardikoanando.Adapter
 
+import android.content.Intent
 import android.icu.text.Transliterator.Position
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import mi2a.kardikoanando.api_product_kardikoanando.DetailProductActivity
 import mi2a.kardikoanando.api_product_kardikoanando.Model.ModelProduct
 import mi2a.kardikoanando.api_product_kardikoanando.R
 
@@ -26,6 +28,7 @@ class ProductAdapter(
         private val title : TextView = itemView.findViewById(R.id.txtTitle)
         private val brand : TextView = itemView.findViewById(R.id.txtBrand)
         private val price : TextView = itemView.findViewById(R.id.txtPrice)
+        val cardProduct: View = itemView.findViewById(R.id.cardProduct)
 
         //cek product saat ini
         private var currentProduct:ModelProduct? = null
@@ -50,7 +53,9 @@ class ProductAdapter(
             Glide.with(itemView).load(product.thumbnail).centerCrop()
                 .into(imgProduct)
         }
+
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup , viewType: Int): ProductViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
@@ -62,6 +67,15 @@ class ProductAdapter(
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = getItem(position)
         holder.bind(product)
+        holder.cardProduct.setOnClickListener() {
+            val intent = Intent(holder.itemView.context, DetailProductActivity::class.java)
+            intent.putExtra("title", product.title)
+            intent.putExtra("description", product.description)
+            intent.putExtra("thumbnail", product.thumbnail)
+            intent.putExtra("price", product.price)
+            intent.putExtra("stok", product.stock)
+            holder.itemView.context.startActivity(intent)
+        }
     }
 
 }
